@@ -34,16 +34,14 @@ clean:
 	rm -fr objects
 rebuild: clean all
 burn: salida.elf
-	openocd -fboard/ek-tm4c123gxl.cfg -c"init" -c"reset" -c"sleep 300" -c"reset halt" -c"sleep 300" -c"flash write_image erase salida.elf 0x00 elf" -c"reset" -c"shutdown"
+	openocd -f board/st_nucleo_f3.cfg -c"init" -c"sleep 300"  -c"program erase salida.elf" -c"sleep 300" -c"reset" -c"shutdown"
 debug: salida.elf
-	openocd -fboard/ek-tm4c123gxl.cfg -lmyLog &
-	sleep 1
-	! echo "reset" | telnet localhost 4444
-	! echo "reset halt" | telnet localhost 4444
-	sleep 1
-	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" salida.elf
-debugClose: myLog
-	! echo "reset" | telnet localhost 4444
-	sleep 1
-	! echo "shutdown" | telnet localhost 4444
-	rm -f myLog
+	openocd -f board/st_nucleo_f3.cfg &>/dev/null & 
+	sleep 1 ;
+	! echo "reset" | telnet localhost 4444 ;
+	! echo "reset halt" | telnet localhost 4444 ;
+	sleep 1 ;
+	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" salida.elf ;	
+	! echo "reset" | telnet localhost 4444 ;
+	sleep 1 ;
+	! echo "shutdown" | telnet localhost 4444 ;
