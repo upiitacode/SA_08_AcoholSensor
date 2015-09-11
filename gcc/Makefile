@@ -1,16 +1,30 @@
-INCLUDE_DIRS:= device/include cmsis/include ../include 
+INCLUDE_DIRS:= device/include cmsis/include ../include
 SOURCE_DIRS:=  device/source ../source
 
-CFILES:= system_stm32f30x.c main.c  
+#the C files to compile
+CFILES:= system_stm32f30x.c main.c
+#the assembly files assemble
 ASM_FILES:= startup_stm32f302x8.S
-
-
-
-INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS)) 
+#the target microcontroller
 TCHIP=STM32F302x8
+#The compiler to use
 CC=arm-none-eabi-gcc
-CFLAGS=-mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=c99 -g -Wall
-CPPFLAGS= $(INCLUDE_FLAGS) -D$(TCHIP)
+#LINKER OPTIONS
+#The linker script for the microcontroller 
+LD_SCRIPTS:= gcc_arm.ld
+#the directories for linker files 
+LIB_DIRS:= device/
+#the libraries to link 
+LIB_NAMES:=
+#linker flags 
+LFLAGS:= $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS) 
+#PREPROCESSOR OPTIONS
+#Define macro for all files
+DEFINES:= 
+DEFINE_FLAGS:=$(patsubst %,-D%,$(DEFINES))
+INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS)) 
+CFLAGS= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=c99 -Wall -g -ffunction-sections -fdata-sections 
+CPPFLAGS= $(INCLUDE_FLAGS) $(DEFINE_FLAGS) -D$(TCHIP) 
 vpath %.h $(INCLUDE_DIRS)
 vpath %.c $(SOURCE_DIRS)
 vpath %.S device/source
@@ -23,15 +37,16 @@ all: salida.elf
 objects:
 	mkdir objects
 salida.elf: objects $(COBJECTS) $(ASMOBJECTS)
-	$(CC) $(CFLAGS) -Ldevice -Tgcc_arm.ld objects/*.o -o $@
+	$(CC) -Wl,--gc-sections -specs=nano.specs $(CFLAGS) objects/*.o $(LFLAGS) -o $@
+	arm-none-eabi-size $@ ;
 $(COBJECTS): %.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
 $(ASMOBJECTS): %.o: %.S
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
 .PHONY:clean rebuild burn
 clean:
-	rm -f  *.elf
-	rm -fr objects
+	rm -f  *.elf ;
+	rm -fr objects ;
 rebuild: clean all
 burn: salida.elf
 	openocd -f board/st_nucleo_f3.cfg -c"init" -c"sleep 300"  -c"program erase salida.elf" -c"sleep 300" -c"reset" -c"shutdown"
