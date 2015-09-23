@@ -8,7 +8,7 @@ ASM_FILES:= startup_stm32f302x8.S
 #the target microcontroller
 TCHIP=STM32F302x8
 #The compiler to use
-CC=arm-none-eabi-gcc
+CC=arm-none-eabi-g++
 #LINKER OPTIONS
 #The linker script for the microcontroller 
 LD_SCRIPTS:= gcc_arm.ld
