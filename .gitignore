@@ -3,6 +3,8 @@
 /gcc/salida.elf
 /mdk/*
 
+*.swp
+
 !/mdk/*.uvprojx
 !/mdk/*.uvoptx
 !/mdk/RTE
