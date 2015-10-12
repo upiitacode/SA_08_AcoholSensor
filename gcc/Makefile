@@ -1,62 +1,96 @@
+SOURCE_DIRS:= device/source ../source
 INCLUDE_DIRS:= device/include cmsis/include ../include
-SOURCE_DIRS:=  device/source ../source
+LINKER_DIRS:=
 
-#the C files to compile
-CFILES:= system_stm32f30x.c main.c
-#the assembly files assemble
-ASM_FILES:= startup_stm32f302x8.S
-#the target microcontroller
-TCHIP=STM32F302x8
-#The compiler to use
-CC=arm-none-eabi-g++
-#LINKER OPTIONS
-#The linker script for the microcontroller 
+OUTPUT_EXEC:= salida.elf
+
+C_SOURCE_FILES:= system_stm32f30x.c main.c
+CXX_SOURCE_FILES:=
+ASM_SOURCE_FILES:= startup_stm32f302x8.S
+LINKER_FILES:=
+
 LD_SCRIPTS:= gcc_arm.ld
-#the directories for linker files 
+
+C_OBJECTS:= $(C_SOURCE_FILES:.c=.o)
+CXX_OBJECTS:= $(CXX_SOURCE_FILES:.cc=.o)
+ASM_OBJECTS:= $(ASM_SOURCE_FILES:.S=.o)
+
+TARGET_CHIP:=STM32F302x8
+ARCH_FLAGS:= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections
+USER_CPP_FLAGS:=
+USER_DEFINES:=
+USER_ASM_FLAGS:=
+USER_C_FLAGS:= -std=c99
+USER_CXX_FLAGS:= -std=c++11
+USER_LINKER_FLAGS:= -Wl,--gc-sections -specs=nano.specs
+
+CPP_DEFINES:= $(TARGET_CHIP) $(USER_DEFINES)
+CPP_DEFINE_FLAGS:=$(patsubst %,-D%,$(CPP_DEFINES))
+INCLUDE_FLAGS:= $(patsubst %,-I%,$(INCLUDE_DIRS))
+CPP_FLAGS:= $(CPP_DEFINE_FLAGS) $(INCLUDE_FLAGS) $(USER_CPP_FLAGS)
+
+#LINKER OPTIONS
+#The linker script for the microcontroller
+LD_SCRIPTS:= gcc_arm.ld
+#the directories for linker files
 LIB_DIRS:= device/
-#the libraries to link 
+#the libraries to link
 LIB_NAMES:=
-#linker flags 
-LFLAGS:= $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS) 
-#PREPROCESSOR OPTIONS
-#Define macro for all files
-DEFINES:= 
-DEFINE_FLAGS:=$(patsubst %,-D%,$(DEFINES))
-INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS)) 
-CFLAGS= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=c99 -Wall -g -ffunction-sections -fdata-sections 
-CPPFLAGS= $(INCLUDE_FLAGS) $(DEFINE_FLAGS) -D$(TCHIP) 
-vpath %.h $(INCLUDE_DIRS)
+#linker flags
+LFLAGS:= $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS)
+
+ASM_FLAGS:= $(ARCH_FLAGS) $(COMMON_FLAGS) $(USER_ASM_FLAGS)
+C_FLAGS:= $(ARCH_FLAGS) $(COMMON_FLAGS) $(USER_C_FLAGS)
+CXX_FLAGS:= $(ARCH_FLAGS) $(COMMON_FLAGS) $(USER_CXX_FLAGS)
+LINKER_FLAGS:= $(ARCH_FLAGS) $(COMMON_FLAGS) $(USER_LINKER_FLAGS) $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS)
+
+OBJECTS_DIR:= objects
+BIN_DIR:= bin
+
+DIRS_TO_CREATE:= $(OBJECTS_DIR) $(BIN_DIR)
+
+OBJECTS:= $(C_OBJECTS) $(CXX_OBJECTS) $(ASM_OBJECTS)
+OBJECTS_WITH_PATH:= $(patsubst %,$(OBJECTS_DIR)/%,$(OBJECTS))
+
+CC=arm-none-eabi-gcc
+CXX=arm-none-eabi-g++
+AS=arm-none-eabi-gcc
+LN=arm-none-eabi-gcc
+
 vpath %.c $(SOURCE_DIRS)
-vpath %.S device/source
-vpath %.o objects
+vpath %.cc $(SOURCE_DIRS)
+vpath %.S $(SOURCE_DIRS)
+vpath %.o $(OBJECTS_DIR)
+vpath %.a $(BIN_DIR) $(LINKER_DIRS)
+vpath %.elf $(BIN_DIR)
 
-COBJECTS:= $(patsubst %.c,%.o,$(CFILES)) 
-ASMOBJECTS:= $(patsubst %.S,%.o,$(ASM_FILES))
+.PHONY: disp clean debug burn
 
-all: salida.elf 
-objects:
-	mkdir objects
-salida.elf: objects $(COBJECTS) $(ASMOBJECTS)
-	$(CC) -Wl,--gc-sections -specs=nano.specs $(CFLAGS) objects/*.o $(LFLAGS) -o $@
-	arm-none-eabi-size $@ ;
-$(COBJECTS): %.o: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
-$(ASMOBJECTS): %.o: %.S
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
-.PHONY:clean rebuild burn
+all: $(OUTPUT_EXEC)
+$(OUTPUT_EXEC): $(OBJECTS) $(LINKER_FILES)
+	$(LN) $(OBJECTS_WITH_PATH) $(LINKER_FILES) $(LINKER_FLAGS) -o $@
+$(DIRS_TO_CREATE): %:
+	mkdir $@
+$(C_OBJECTS): %.o : %.c | $(OBJECTS_DIR)
+	$(CC) -c $(C_FLAGS) $(CPP_FLAGS) $< -o $(OBJECTS_DIR)/$@
+$(ASM_OBJECTS): %.o : %.S | $(OBJECTS_DIR)
+	$(AS) -c $(ASM_FLAGS) $(CPP_FLAGS) $< -o $(OBJECTS_DIR)/$@
+$(CXX_OBJECTS): %.o : %.cc | $(OBJECTS_DIR)
+	$(CXX) -c $(CXX_FLAGS) $(CPP_FLAGS) $< -o $(OBJECTS_DIR)/$@
 clean:
-	rm -f  *.elf ;
-	rm -fr objects ;
-rebuild: clean all
+	rm -rf $(DIRS_TO_CREATE) $(OUTPUT_EXEC)
+dist_clean: clean
+
 burn: salida.elf
-	openocd -f board/st_nucleo_f3.cfg -c"init" -c"sleep 300"  -c"program erase salida.elf" -c"sleep 300" -c"reset" -c"shutdown"
+	openocd -f board/st_nucleo_f3.cfg -c"init" -c"sleep 300"  -c"program erase $(OUTPUT_EXEC)" -c"sleep 300" -c"reset" -c"shutdown"
 debug: salida.elf
 	openocd -f board/st_nucleo_f3.cfg &>/dev/null & 
 	sleep 1 ;
 	! echo "reset" | telnet localhost 4444 ;
 	! echo "reset halt" | telnet localhost 4444 ;
 	sleep 1 ;
-	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" salida.elf ;	
+	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" $(OUTPUT_EXEC);	
 	! echo "reset" | telnet localhost 4444 ;
 	sleep 1 ;
 	! echo "shutdown" | telnet localhost 4444 ;
