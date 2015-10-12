@@ -20,7 +20,7 @@ ASM_OBJECTS:= $(ASM_SOURCE_FILES:.S=.o)
 
 TARGET_CHIP:=STM32F302x8
 ARCH_FLAGS:= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
-COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections -fno-exceptions
+COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections -fno-exceptions -Os
 USER_CPP_FLAGS:=
 USER_DEFINES:= USE_STDPERIPH_DRIVER
 USER_ASM_FLAGS:= -std=c99
