@@ -70,6 +70,7 @@ vpath %.elf $(BIN_DIR)
 all: $(OUTPUT_EXEC)
 $(OUTPUT_EXEC): $(OBJECTS) $(LINKER_FILES)
 	$(LN) $(OBJECTS_WITH_PATH) $(LINKER_FILES) $(LINKER_FLAGS) -o $@
+	arm-none-eabi-size $@
 $(DIRS_TO_CREATE): %:
 	mkdir $@
 $(C_OBJECTS): %.o : %.c | $(OBJECTS_DIR)
@@ -82,15 +83,15 @@ clean:
 	rm -rf $(DIRS_TO_CREATE) $(OUTPUT_EXEC)
 dist_clean: clean
 
-burn: salida.elf
+burn: $(OUTPUT_EXEC)
 	openocd -f board/st_nucleo_f3.cfg -c"init" -c"sleep 300"  -c"program erase $(OUTPUT_EXEC)" -c"sleep 300" -c"reset" -c"shutdown"
-debug: salida.elf
-	openocd -f board/st_nucleo_f3.cfg &>/dev/null & 
+debug:$(OUTPUT_EXEC)
+	openocd -f board/st_nucleo_f3.cfg &>/dev/null &
 	sleep 1 ;
 	! echo "reset" | telnet localhost 4444 ;
 	! echo "reset halt" | telnet localhost 4444 ;
 	sleep 1 ;
-	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" $(OUTPUT_EXEC);	
+	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" $(OUTPUT_EXEC);
 	! echo "reset" | telnet localhost 4444 ;
 	sleep 1 ;
 	! echo "shutdown" | telnet localhost 4444 ;
