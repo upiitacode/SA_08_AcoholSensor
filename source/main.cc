@@ -55,7 +55,10 @@ void button_init(void){
 /**
  * Exteral interrupt handler
  */
-void EXTI15_10_IRQHandler(void){
-	EXTI->PR = EXTI_PR_PR13;
-	GPIOB->ODR = GPIOC->IDR;//Transfer button value to led
+extern "C"
+{
+	void EXTI15_10_IRQHandler(void){
+		EXTI->PR = EXTI_PR_PR13;
+		GPIOB->ODR = GPIOC->IDR;//Transfer button value to led
+	}
 }

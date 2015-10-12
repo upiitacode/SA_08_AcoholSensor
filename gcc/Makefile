@@ -6,7 +6,7 @@ OUTPUT_EXEC:= salida.elf
 
 C_SOURCE_FILES:= system_stm32f30x.c
 CXX_SOURCE_FILES:= main.cc
-ASM_SOURCE_FILES:= startup_stm32f302x8.S
+ASM_SOURCE_FILES:= startup_ARMCM4.S
 LINKER_FILES:=
 
 LD_SCRIPTS:= gcc_arm.ld
@@ -17,13 +17,13 @@ ASM_OBJECTS:= $(ASM_SOURCE_FILES:.S=.o)
 
 TARGET_CHIP:=STM32F302x8
 ARCH_FLAGS:= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
-COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections
+COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections -fno-exceptions
 USER_CPP_FLAGS:=
 USER_DEFINES:=
-USER_ASM_FLAGS:= -std=c++11
-USER_C_FLAGS:= -std=c++11
-USER_CXX_FLAGS:= -std=c++11
-USER_LINKER_FLAGS:= -std=c++11 -Wl,--gc-sections -specs=nano.specs
+USER_ASM_FLAGS:=
+USER_C_FLAGS:=
+USER_CXX_FLAGS:=
+USER_LINKER_FLAGS:= -Wl,--gc-sections -specs=nano.specs --specs=nosys.specs
 
 CPP_DEFINES:= $(TARGET_CHIP) $(USER_DEFINES)
 CPP_DEFINE_FLAGS:=$(patsubst %,-D%,$(CPP_DEFINES))
