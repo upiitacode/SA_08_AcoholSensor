@@ -4,8 +4,8 @@ LINKER_DIRS:=
 
 OUTPUT_EXEC:= salida.elf
 
-C_SOURCE_FILES:= system_stm32f30x.c main.c
-CXX_SOURCE_FILES:=
+C_SOURCE_FILES:= system_stm32f30x.c
+CXX_SOURCE_FILES:= main.cc
 ASM_SOURCE_FILES:= startup_stm32f302x8.S
 LINKER_FILES:=
 
@@ -20,10 +20,10 @@ ARCH_FLAGS:= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections
 USER_CPP_FLAGS:=
 USER_DEFINES:=
-USER_ASM_FLAGS:=
-USER_C_FLAGS:= -std=c99
+USER_ASM_FLAGS:= -std=c++11
+USER_C_FLAGS:= -std=c++11
 USER_CXX_FLAGS:= -std=c++11
-USER_LINKER_FLAGS:= -Wl,--gc-sections -specs=nano.specs
+USER_LINKER_FLAGS:= -std=c++11 -Wl,--gc-sections -specs=nano.specs
 
 CPP_DEFINES:= $(TARGET_CHIP) $(USER_DEFINES)
 CPP_DEFINE_FLAGS:=$(patsubst %,-D%,$(CPP_DEFINES))
@@ -53,10 +53,10 @@ DIRS_TO_CREATE:= $(OBJECTS_DIR) $(BIN_DIR)
 OBJECTS:= $(C_OBJECTS) $(CXX_OBJECTS) $(ASM_OBJECTS)
 OBJECTS_WITH_PATH:= $(patsubst %,$(OBJECTS_DIR)/%,$(OBJECTS))
 
-CC=arm-none-eabi-gcc
+CC=arm-none-eabi-g++
 CXX=arm-none-eabi-g++
-AS=arm-none-eabi-gcc
-LN=arm-none-eabi-gcc
+AS=arm-none-eabi-g++
+LN=arm-none-eabi-g++
 
 vpath %.c $(SOURCE_DIRS)
 vpath %.cc $(SOURCE_DIRS)
