@@ -372,6 +372,7 @@ Default_Handler:
     def_irq_handler     USART1_IRQHandler
     def_irq_handler     USART2_IRQHandler
     def_irq_handler     USART3_IRQHandler
+    def_irq_handler     EXTI15_10_IRQHandler
     def_irq_handler     RTC_Alarm_IRQHandler
     def_irq_handler     USBWakeUp_IRQHandler
     def_irq_handler     SPI3_IRQHandler

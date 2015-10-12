@@ -1,5 +1,5 @@
-SOURCE_DIRS:= ./source ../source
-INCLUDE_DIRS:= ./include ../include
+SOURCE_DIRS:= ./source ../source ../retarget/source
+INCLUDE_DIRS:= ./include ../include ../retarget/include
 LINKER_DIRS:= ./gmock
 
 GTEST_DIR = $(GMOCK_HOME)/gtest
@@ -9,7 +9,7 @@ GMOCK_LIB:=./gmock/gmock_main.a
 TESTS:= gmock_test
 
 C_SOURCE_FILES:=
-CXX_SOURCE_FILES:= other_test.cc
+CXX_SOURCE_FILES:= other_test.cc serial_stream.cc
 ASM_SOURCE_FILES:=
 LINKER_FILES:= $(MYLIB)
 
@@ -65,6 +65,6 @@ clean:
 dist_clean: clean
 	make --directory=./gmock clean
 $(GMOCK_LIB):
-	make --directory=./gmock 
+	make --directory=./gmock
 test: $(TESTS)
 	./$(TESTS)

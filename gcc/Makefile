@@ -1,11 +1,14 @@
-SOURCE_DIRS:= device/source ../source
-INCLUDE_DIRS:= device/include cmsis/include ../include
+SOURCE_DIRS:= device/source ../source ../STM32F30x_StdPeriph_Driver/src ../retarget/source
+INCLUDE_DIRS:= device/include cmsis/include ../include ../STM32F30x_StdPeriph_Driver/inc ../retarget/include
 LINKER_DIRS:=
 
 OUTPUT_EXEC:= salida.elf
 
-C_SOURCE_FILES:= system_stm32f30x.c
-CXX_SOURCE_FILES:= main.cc
+#All the dtandard peripherial library files
+SPL_FILES:= $(notdir $(wildcard ../STM32F30x_StdPeriph_Driver/src/*.c ))
+
+C_SOURCE_FILES:= system_stm32f30x.c $(SPL_FILES)
+CXX_SOURCE_FILES:= main.cc serial_stream.cc retarget_stm32f3.cc 
 ASM_SOURCE_FILES:= startup_ARMCM4.S
 LINKER_FILES:=
 
@@ -19,10 +22,10 @@ TARGET_CHIP:=STM32F302x8
 ARCH_FLAGS:= -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 COMMON_FLAGS:= -Wall -g -ffunction-sections -fdata-sections -fno-exceptions
 USER_CPP_FLAGS:=
-USER_DEFINES:=
-USER_ASM_FLAGS:=
-USER_C_FLAGS:=
-USER_CXX_FLAGS:=
+USER_DEFINES:= USE_STDPERIPH_DRIVER
+USER_ASM_FLAGS:= -std=c99
+USER_C_FLAGS:= -std=c99
+USER_CXX_FLAGS:= -std=c++11
 USER_LINKER_FLAGS:= -Wl,--gc-sections -specs=nano.specs --specs=nosys.specs
 
 CPP_DEFINES:= $(TARGET_CHIP) $(USER_DEFINES)
@@ -53,9 +56,9 @@ DIRS_TO_CREATE:= $(OBJECTS_DIR) $(BIN_DIR)
 OBJECTS:= $(C_OBJECTS) $(CXX_OBJECTS) $(ASM_OBJECTS)
 OBJECTS_WITH_PATH:= $(patsubst %,$(OBJECTS_DIR)/%,$(OBJECTS))
 
-CC=arm-none-eabi-g++
+CC=arm-none-eabi-gcc
 CXX=arm-none-eabi-g++
-AS=arm-none-eabi-g++
+AS=arm-none-eabi-gcc
 LN=arm-none-eabi-g++
 
 vpath %.c $(SOURCE_DIRS)
