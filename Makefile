@@ -1,14 +1,14 @@
 .PHONY: test clean dist_clean test_clean
 all: build
 build:
-	make --directory=./gcc
+	$(MAKE) --directory=./gcc
 burn:
-	make --directory=./gcc burn
+	$(MAKE) --directory=./gcc burn
 test:
-	make --directory=./tests test
+	$(MAKE) --directory=./tests test
 clean:
-	make --directory=./gcc clean
+	$(MAKE) --directory=./gcc clean
 test_clean:
-	make --directory=./tests clean
+	$(MAKE) --directory=./tests clean
 dist_clean: clean
-	make --directory=./tests dist_clean
+	$(MAKE) --directory=./tests dist_clean

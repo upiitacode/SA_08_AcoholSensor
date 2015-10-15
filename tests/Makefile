@@ -63,8 +63,8 @@ $(CXX_OBJECTS): %.o : %.cc | $(OBJECTS_DIR)
 clean:
 	rm -rf $(DIRS_TO_CREATE) $(TESTS)
 dist_clean: clean
-	make --directory=./gmock clean
+	$(MAKE) --directory=./gmock clean
 $(GMOCK_LIB):
-	make --directory=./gmock
+	$(MAKE) --directory=./gmock
 test: $(TESTS)
 	./$(TESTS)
