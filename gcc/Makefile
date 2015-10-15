@@ -8,7 +8,7 @@ OUTPUT_EXEC:= salida.elf
 SPL_FILES:= $(notdir $(wildcard ../STM32F30x_StdPeriph_Driver/src/*.c ))
 
 C_SOURCE_FILES:= system_stm32f30x.c $(SPL_FILES)
-CXX_SOURCE_FILES:= main.cc serial_stream.cc retarget_stm32f3.cc 
+CXX_SOURCE_FILES:= main.cc serial_stream.cc retarget_stm32f3.cc  timer.cc
 ASM_SOURCE_FILES:= startup_ARMCM4.S
 LINKER_FILES:=
 

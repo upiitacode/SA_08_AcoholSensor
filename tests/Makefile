@@ -9,7 +9,7 @@ GMOCK_LIB:=./gmock/gmock_main.a
 TESTS:= gmock_test
 
 C_SOURCE_FILES:=
-CXX_SOURCE_FILES:= other_test.cc serial_stream.cc
+CXX_SOURCE_FILES:= timer_test.cc timer.cc
 ASM_SOURCE_FILES:=
 LINKER_FILES:= $(MYLIB)
 
