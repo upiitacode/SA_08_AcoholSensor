@@ -6,15 +6,15 @@
 class SerialUSART2: public Serial_stream{
 	public:
 		SerialUSART2(int baudrate);
-		char getChar(void);
-		void sendChar(char c);
+		virtual char getChar(void);
+		virtual void sendChar(char c);
 };
 
 class SerialUSART1 : public Serial_stream{
 	public:
 		SerialUSART1(int baudrate);
-		char getChar(void);
-		void sendChar(char c);
+		virtual char getChar(void);
+		virtual void sendChar(char c);
 };
 
 #endif

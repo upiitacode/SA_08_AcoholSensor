@@ -38,7 +38,7 @@ void Serial_stream::printf(const char * format ,...){
 	#if defined ( __GNUC__ )
 	vasprintf(&tempBuffer,format, args);
 	#else	
-	tempBuffer=malloc(OUT_BUFFER_SIZE);//alocate memory manualy
+	tempBuffer=(char *)malloc(OUT_BUFFER_SIZE);//alocate memory manualy
 	vsnprintf(tempBuffer,OUT_BUFFER_SIZE,format,args);
 	#endif
 	va_end(args);
