@@ -18,7 +18,7 @@ int main(){
 	Serial_stream* serial = new SerialUSART2(9600);
 	SystemCoreClockUpdate();
 	serial->printf("Starting System\n");
-	serial->printf("ProcessorSpeed: %dHz\n",SystemCoreClock);
+	serial->printf("ProcessorSpeed: %dHz\n",(int)SystemCoreClock);
 	//User application
 	serial->printf("Initializing kernel...");	
 	osKernelInitialize();
