@@ -1,16 +1,16 @@
-SOURCE_DIRS:= device/source ../source ../STM32F30x_StdPeriph_Driver/src ../retarget/source
-INCLUDE_DIRS:= device/include cmsis/include ../include ../STM32F30x_StdPeriph_Driver/inc ../retarget/include
-LINKER_DIRS:=
+SOURCE_DIRS:= device/source ../source ../STM32F30x_StdPeriph_Driver/src ../retarget/source ../mdk/RTE/CMSIS
+INCLUDE_DIRS:= device/include cmsis/include ../include ../STM32F30x_StdPeriph_Driver/inc ../retarget/include ./CMSIS_RTX/include ../mdk/RTE
+LINKER_DIRS:= ./CMSIS_RTX/bin/
 
 OUTPUT_EXEC:= salida.elf
 
 #All the dtandard peripherial library files
 SPL_FILES:= $(notdir $(wildcard ../STM32F30x_StdPeriph_Driver/src/*.c ))
 
-C_SOURCE_FILES:= system_stm32f30x.c $(SPL_FILES)
-CXX_SOURCE_FILES:= main.cc serial_stream.cc retarget_stm32f3.cc  timer.cc
+C_SOURCE_FILES:= system_stm32f30x.c $(SPL_FILES) RTX_Conf_CM.c
+CXX_SOURCE_FILES:= main.cc serial_stream.cc retarget_stm32f3.cc
 ASM_SOURCE_FILES:= startup_ARMCM4.S
-LINKER_FILES:=
+LINKER_FILES:= ./CMSIS_RTX/bin/libRTX_CM4.a
 
 LD_SCRIPTS:= gcc_arm.ld
 
