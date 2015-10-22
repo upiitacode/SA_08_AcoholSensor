@@ -1,4 +1,4 @@
-#include "retarget_stm32f3.h"
+#include "serial_stream_stm32f3.h"
 #include "stm32f30x.h"                  // Device header
 
 SerialUSART2::SerialUSART2(int baudrate){

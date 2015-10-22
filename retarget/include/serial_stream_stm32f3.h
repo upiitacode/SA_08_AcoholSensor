@@ -1,5 +1,5 @@
-#ifndef _RETARGET_STM32F3_H
-#define _RETARGET_STM32F3_H
+#ifndef _SERIAL_STREAM_STM32F3_H
+#define _SERIAL_STREAM_STM32F3_H
 
 #include "serial_stream.h"
 

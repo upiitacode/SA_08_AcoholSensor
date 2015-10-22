@@ -1,4 +1,4 @@
-#include "retarget_stm32f3.h"                  // Device header
+#include "serial_stream_stm32f3.h"
 #include "cmsis_os.h"                   // ARM::CMSIS:RTOS:Keil RTX
 #include "stm32f30x.h"                  // Device header
 
@@ -20,18 +20,18 @@ int main(){
 	serial->printf("Starting System\n");
 	serial->printf("ProcessorSpeed: %dHz\n",(int)SystemCoreClock);
 	//User application
-	serial->printf("Initializing kernel...");	
+	serial->printf("Initializing kernel...");
 	osKernelInitialize();
 	serial->printf("done\n");
-	serial->printf("Setting threads...");	
+	serial->printf("Setting threads...");
 	tarea1Init();
 	tarea2Init();
-	serial->printf("done\n");	
+	serial->printf("done\n");
 	serial->printf("starting kernel...");
 	osKernelStart();
 	serial->printf("done\n");
 	serial->printf("System ready, Runnig at thread \"main\"\n");
-	
+
 	int counter = 0;
 	while(1){
 		osDelay(1000);
@@ -51,7 +51,7 @@ void tarea2Init(void){
 void led_init(void){
 	//Turn on the GPIOB peripherial
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
-	//Configure PB13  as push pull ouput an set the output to high 
+	//Configure PB13  as push pull ouput an set the output to high
 	GPIOB->MODER &=~(GPIO_MODER_MODER13);
 	GPIOB->MODER |=GPIO_MODER_MODER13_0;//output
 	GPIOB->ODR |= GPIO_ODR_13;
