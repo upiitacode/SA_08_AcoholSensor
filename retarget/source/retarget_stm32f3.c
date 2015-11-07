@@ -1,7 +1,7 @@
-#include "serial_stream_stm32f3.h"
+#include "retarget_stm32f3.h"
 #include "stm32f30x.h"                  // Device header
 
-SerialUSART2::SerialUSART2(int baudrate){
+void USART2_init(int baudrate){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 	
@@ -36,20 +36,20 @@ SerialUSART2::SerialUSART2(int baudrate){
 }
 
 
-void SerialUSART2::sendChar(char ch){
+void USART2_sendChar(char ch){
 	while(!USART_GetFlagStatus(USART2,USART_FLAG_TXE));
 	
 	USART_SendData(USART2,ch);
 }
 
-char SerialUSART2::getChar(void){
+char USART2_getChar(void){
 	if(USART_GetFlagStatus(USART2,USART_FLAG_ORE)) USART_ClearFlag(USART2,USART_FLAG_ORE); 
 	
 	while(!USART_GetFlagStatus(USART2,USART_FLAG_RXNE));
 	return USART_ReceiveData(USART2);
 }
 
-SerialUSART1::SerialUSART1(int baudrate){
+void USART1_init(int baudrate){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 	
@@ -85,13 +85,13 @@ SerialUSART1::SerialUSART1(int baudrate){
 }
 
 
-void SerialUSART1::sendChar(char ch){
+void USART1_sendChar(char ch){
 	while(!USART_GetFlagStatus(USART1,USART_FLAG_TXE));
 	
 	USART_SendData(USART1,ch);
 }
 
-char SerialUSART1::getChar(void){
+char USART1_getChar(void){
 	if(USART_GetFlagStatus(USART1,USART_FLAG_ORE)) USART_ClearFlag(USART1,USART_FLAG_ORE); 
 	
 	while(!USART_GetFlagStatus(USART1,USART_FLAG_RXNE));

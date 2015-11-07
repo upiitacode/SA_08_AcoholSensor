@@ -1,11 +1,11 @@
-#ifndef _SERIAL_STREAM_H
-#define _SERIAL_STREAM_H
+#ifndef _SERIALSTREAM_H
+#define _SERIALSTREAM_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 
-class Serial_stream{
+class SerialStream{
 	public:
 		virtual char getChar(void) = 0;
 		virtual void sendChar(char) = 0;
@@ -14,4 +14,4 @@ class Serial_stream{
 		void printf(const char * format, ...) __attribute__ ((format (printf, 2, 3)));
 };
 
-#endif
+#endif// _SERIALSTREAM_H

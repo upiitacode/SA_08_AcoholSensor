@@ -1,16 +1,16 @@
-#ifndef _SERIAL_STREAM_STM32F3_H
-#define _SERIAL_STREAM_STM32F3_H
+#ifndef _SERIALSTREAM_STM32F4_H
+#define _SERIALSTREAM_STM32F4_H
 
-#include "serial_stream.h"
+#include "SerialStream.h"
 
-class SerialUSART2: public Serial_stream{
+class SerialUSART2: public SerialStream{
 	public:
 		SerialUSART2(int baudrate);
 		virtual char getChar(void);
 		virtual void sendChar(char c);
 };
 
-class SerialUSART1 : public Serial_stream{
+class SerialUSART1 : public SerialStream{
 	public:
 		SerialUSART1(int baudrate);
 		virtual char getChar(void);
