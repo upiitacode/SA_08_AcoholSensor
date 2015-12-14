@@ -26,7 +26,7 @@ USER_DEFINES:= USE_STDPERIPH_DRIVER
 USER_ASM_FLAGS:= -std=c99
 USER_C_FLAGS:= -std=c99
 USER_CXX_FLAGS:= -std=c++11 -flto -O1
-USER_LINKER_FLAGS:= -std=c++11 -Wl,--gc-sections -specs=nano.specs --specs=nosys.specs -flto -O1
+USER_LINKER_FLAGS:= -std=c++11 -Wl,--gc-sections -specs=nano.specs --specs=nosys.specs -flto -O1 -u _printf_float
 
 CPP_DEFINES:= $(TARGET_CHIP) $(USER_DEFINES)
 CPP_DEFINE_FLAGS:=$(patsubst %,-D%,$(CPP_DEFINES))
