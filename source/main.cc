@@ -26,20 +26,24 @@ void adc_timer6_start(void){
 
 #define SAMPLES_PER_READING 100
 
-float get_stable_reading(void){
+float get_stable_reading(int channel){
 	float accu = 0;
 	for(int i = 0; i < SAMPLES_PER_READING; i++){
-		accu += adc_getInjectedChannelValue(ADC_INJECTED_CH1);
+		accu += adc_getInjectedChannelValue(channel);
 		osDelay(1);
 	}
 	return (accu)*(3.3/(4095.0*(SAMPLES_PER_READING)))*(1.008471);
 }
 
 float get_resistance(void){
-	float current = get_stable_reading()/1000000.0;
+	float current = get_stable_reading(0)/1000000.0;
 	float voltage = 2.5;
 	float resistance = voltage/current;
 	return resistance;
+}
+
+float get_temperature(void){
+	return get_stable_reading(1)*(100.0);
 }
 
 SerialStream* serial;
@@ -56,6 +60,6 @@ int main(){
 	adc_timer6_start();
 
 	while(1){
-		serial->printf("Rs = %10.1f\n",get_resistance());
+		serial->printf("Rs = %10.1f, T = %5.1f\n",get_resistance(), get_temperature());
 	}
 }
