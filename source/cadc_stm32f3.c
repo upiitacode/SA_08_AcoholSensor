@@ -54,14 +54,14 @@ void adc_init_injected(int use_trigger, int trigger){
 	//Connect timer with adc
 	myADC.ADC_ExternalTrigInjecConvEvent=trigger;//Start convertion on TIM2_OTRIG
 	
-	myADC.ADC_NbrOfInjecChannel=2;
+	myADC.ADC_NbrOfInjecChannel=1;
 	myADC.ADC_InjecSequence1=ADC_InjectedChannel_6;
 	myADC.ADC_InjecSequence2=ADC_InjectedChannel_7;
 	myADC.ADC_InjecSequence3=ADC_InjectedChannel_6;
 	myADC.ADC_InjecSequence4=ADC_InjectedChannel_7;
 	ADC_InjectedInit(ADC1,&myADC);
-	ADC_InjectedChannelSampleTimeConfig(ADC1,ADC_InjectedChannel_6,ADC_SampleTime_7Cycles5);
-	ADC_InjectedChannelSampleTimeConfig(ADC1,ADC_InjectedChannel_7,ADC_SampleTime_7Cycles5);
+	ADC_InjectedChannelSampleTimeConfig(ADC1,ADC_InjectedChannel_6,ADC_SampleTime_61Cycles5);
+	ADC_InjectedChannelSampleTimeConfig(ADC1,ADC_InjectedChannel_7,ADC_SampleTime_61Cycles5);
 	
 	//
 	ADC_ITConfig(ADC1, ADC_IT_JEOS, ENABLE);
