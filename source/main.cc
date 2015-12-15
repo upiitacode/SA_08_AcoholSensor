@@ -59,7 +59,7 @@ int main(){
 	//User application
 	adc_timer6_start();
 
-	float Ro = 10000000.0;
+	float Ro = 5000000.0;
 	float Rs_Ro;
 	float Rs;
 	float temperature;
