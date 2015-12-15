@@ -34,6 +34,24 @@ rh33 = [-9.887230525447578, 1.5929480575928594;
 40.10123584392295, 0.8943406493742067;
 50.162874030165405, 0.8729517538305686]
 
-relative_resistance = sensitivity_data(:,1)'
-alcohol_concentration =sensitivity_data(:,2)'
+relative_resistance = sensitivity_data(:,1)';
+alcohol_concentration =sensitivity_data(:,2)';
 
+function y = interpolate(p1,p2,x)
+	dx = p2(1) - p1(1);
+	dy = p2(2) - p1(2);
+	m = dy/dx;
+	x0 = p1(1);
+	y0 = p1(2);
+	y = m*(x-x0) + y0;
+end
+
+function y = loglogInterpolation(p1,p2,x)
+	y  = 10^(interpolate(log10(p1), log10(p2),log10(x)));
+end
+
+% linear vs log interporlation
+reading  = interpolate(sensitivity_data(1,:), sensitivity_data(4,:), 0.4)
+reading  = loglogInterpolation(sensitivity_data(1,:), sensitivity_data(4,:), 0.4)
+
+dummy = input('press enter to exit')
