@@ -34,8 +34,13 @@ rh33 = [-9.887230525447578, 1.5929480575928594;
 40.10123584392295, 0.8943406493742067;
 50.162874030165405, 0.8729517538305686]
 
-relative_resistance = sensitivity_data(:,1)';
-alcohol_concentration =sensitivity_data(:,2)';
+relative_resistance = sensitivity_data(:,1)
+alcohol_concentration =sensitivity_data(:,2)
+rh85_temp = rh85(:,1)
+rh85_res = rh85(:,2)
+
+rh33_temp = rh33(:,1)
+rh33_res = rh33(:,2)
 
 function y = interpolate(p1,p2,x)
 	dx = p2(1) - p1(1);
