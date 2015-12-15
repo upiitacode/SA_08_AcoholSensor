@@ -58,18 +58,18 @@ int Interpolator::getPairIndex(float x){
 
 float Interpolator::gety(float x){
 	int index = this->getPairIndex(x);
-	int x1 = this->x_data[index];
-	int x2 = this->x_data[index+1];
-	int y1 = this->y_data[index];
-	int y2 = this->y_data[index+1];
+	float x1 = this->x_data[index];
+	float x2 = this->x_data[index+1];
+	float y1 = this->y_data[index];
+	float y2 = this->y_data[index+1];
 	return interpolate(x1,x2,y1,y2,x);
 }
 
 float Interpolator::getyloglog(float x){
 	int index = this->getPairIndex(x);
-	int x1 = this->x_data[index];
-	int x2 = this->x_data[index+1];
-	int y1 = this->y_data[index];
-	int y2 = this->y_data[index+1];
+	float x1 = this->x_data[index];
+	float x2 = this->x_data[index+1];
+	float y1 = this->y_data[index];
+	float y2 = this->y_data[index+1];
 	return logloginterpolate(x1,x2,y1,y2,x);
 }
