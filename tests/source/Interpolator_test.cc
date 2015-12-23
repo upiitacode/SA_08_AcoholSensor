@@ -126,14 +126,3 @@ TEST(InterpolationTests, DataLogLogInterpolationDrecreasingY){
 	Interpolator interpolator2(y_data,x_data,3);
 	EXPECT_THAT(interpolator2.getyloglog(300), FloatEq(4));
 }
-
-const float rh85_temp[9] = {-9.85609, -4.85097, 0.11267, 5.11970, 11.58757, 20.10110, 30.16157, 40.13888, 50.15904};//C
-const float rh85_factor[9] = {1.36426, 1.24955, 1.14073, 1.06733, 0.98224, 0.89139, 0.84492, 0.80582, 0.79033};//Rs/Ro
-const float rh33_temp[9] = {-9.887231, -4.924621, 0.080701, 5.085886, 11.427193, 20.0646, 30.1239, 40.101236, 50.162874};//C
-const float rh33_factor[9] = {1.59295, 1.46200, 1.35172, 1.23848, 1.12534, 1.00647, 0.9349, 0.8943, 0.87295};//Rs/Ro
-
-TEST(InterpolationTests, INterpolate_something){
-	Interpolator interpolator(rh33_temp, rh33_factor,9);
-	EXPECT_THAT(interpolator.gety(20.0646841), Eq(1.0064));
-}
-
